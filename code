@@ -1,0 +1,61 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Initialize the LCD with I2C address 0x27
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// Pin assignments for RGB LED
+const int redPin = 23;
+const int greenPin = 22;
+const int bluePin = 21;
+
+// Variable to hold the RGB LED state (ON/OFF)
+bool rgbOn = true;
+
+void setup() {
+  // Initialize LCD
+  lcd.print();
+  lcd.backlight();
+ 
+  // Set RGB LED pins as outputs
+  pinMode(redPin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+ 
+  // Set RGB LED to "ON" by default
+  if (rgbOn) {
+    setRGBColor(255, 0, 0); // Red color (full brightness for Red channel)
+    lcd.setCursor(0, 0);
+    lcd.print("RGB ON");
+  } else {
+    setRGBColor(0, 0, 0);   // Off (no color)
+    lcd.setCursor(0, 0);
+    lcd.print("RGB OFF");
+  }
+}
+
+void loop() {
+  // Change the RGB LED state after some delay
+  delay(2000);  // 2 seconds
+ 
+  rgbOn = !rgbOn;  // Toggle RGB state
+ 
+  if (rgbOn) {
+    // If RGB is ON, set the LED to red (you can change this to any color)
+    setRGBColor(255, 0, 0);  // Red color
+    lcd.setCursor(0, 0);
+    lcd.print("RGB ON");
+  } else {
+    // If RGB is OFF, turn off the LED
+    setRGBColor(0, 0, 0);  // Off
+    lcd.setCursor(0, 0);
+    lcd.print("RGB OFF");
+  }
+}
+
+void setRGBColor(int red, int green, int blue) {
+  // Set PWM for RGB channels
+  analogWrite(redPin, red);    // Set the red channel PWM (0-255)
+  analogWrite(greenPin, green);  // Set the green channel PWM (0-255)
+  analogWrite(bluePin, blue);  // Set the blue channel PWM (0-255)
+}
